@@ -7,7 +7,7 @@ export default function DashboardHeader({
   return (
     <header className="relative mb-8 mt-6 px-4">
       <div className="flex flex-col items-center gap-4">
-        <h1 className="text-4xl md:text-5xl font-bold font-montserrat text-gray-900 leading-tight text-center">
+        <h1 className="text-4xl md:text-5xl font-bold font-montserrat text-gray-700 leading-tight text-center">
           Панель додавання подій
         </h1>
         {userName && (

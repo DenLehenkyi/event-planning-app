@@ -3,14 +3,12 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { signOutUser } from "@/lib/firebase/firebaseAuthServices";
-
 import {
   addEventToFirestore,
   getEventsFromFirestore,
   updateEventInFirestore,
   deleteEventFromFirestore,
 } from "@/lib/firebase/firestore";
-
 import { Event } from "@/lib/types/types";
 import DashboardHeader from "@/components/events/calendar/DashboardHeader";
 import EventCalendar from "@/components/events/calendar/EventCalendar";
@@ -84,8 +82,9 @@ export default function DashboardPage() {
   };
 
   const handleDateSelect = (selectInfo: any) => {
-    const start = selectInfo.startStr;
-    setNewEvent({ ...newEvent, start });
+    const selectedDate = new Date(selectInfo.startStr);
+    const formattedDate = selectedDate.toISOString().slice(0, 16);
+    setNewEvent({ ...newEvent, start: formattedDate });
     setShowFormModal(true);
   };
 
@@ -93,9 +92,10 @@ export default function DashboardPage() {
     const event = events.find((e) => e.id === clickInfo.event.id);
     if (event) {
       setEditingEvent(event);
+      const formattedStart = new Date(event.start).toISOString().slice(0, 16);
       setNewEvent({
         title: event.title,
-        start: event.start,
+        start: formattedStart,
         description: event.description,
         importance: event.importance,
       });
@@ -153,7 +153,7 @@ export default function DashboardPage() {
         <div className="mb-12">
           <p className="mb-6 text-lg font-bold">Виберіть режим відображення</p>
           <select
-            className="bg-purple-50  font-bold text-white text-lg rounded-lg  block  p-2.5 dark:bg-purple-700 "
+            className="bg-purple-50 font-bold text-white text-lg rounded-lg block p-2.5 dark:bg-purple-700"
             value={displayType}
             onChange={(e) => setDisplayType(e.target.value)}
           >
@@ -163,12 +163,19 @@ export default function DashboardPage() {
         </div>
         {displayType === "calendar" && (
           <>
-            <EventCalendar
-              events={events}
-              onDateSelect={handleDateSelect}
-              onEventClick={handleEventClick}
-              onDeleteClick={(eventId) => setShowDeleteModal(eventId)}
-            />
+            <div
+              className={`relative z-10 ${
+                showFormModal || showDeleteModal ? "pointer-events-none" : ""
+              }`}
+            >
+              <EventCalendar
+                events={events}
+                onDateSelect={handleDateSelect}
+                onEventClick={handleEventClick}
+                onDeleteClick={(eventId) => setShowDeleteModal(eventId)}
+                isModalOpen={showFormModal || !!showDeleteModal}
+              />
+            </div>
             <EventFormModal
               isOpen={showFormModal}
               onClose={() => {
@@ -189,6 +196,13 @@ export default function DashboardPage() {
           </>
         )}
         {displayType === "list" && <EventLists events={events}></EventLists>}
+        <DeleteConfirmationModal
+          isOpen={!!showDeleteModal}
+          onClose={() => setShowDeleteModal(null)}
+          onConfirm={() =>
+            showDeleteModal && handleDeleteEvent(showDeleteModal)
+          }
+        />
       </div>
     </div>
   );

@@ -11,3 +11,50 @@ body {
   color: var(--foreground);
   font-family: "Montserrat", sans-serif;
 }
+
+.fc-daygrid-day {
+  border-radius: 50% !important;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.fc-daygrid-day:hover {
+  transform: scale(1.05);
+  background-color: #e5e7eb !important;
+}
+
+.fc-daygrid-day-number {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+}
+
+.fc-event {
+  border-radius: 8px !important;
+  padding: 4px !important;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 10;
+}
+
+.fc-event:hover {
+  transform: scale(1.05);
+}
+
+.fc-event .delete-button {
+  position: relative;
+  z-index: 20;
+}
+
+.fc-button {
+  font-family: "Montserrat", sans-serif !important;
+  background-color: #3b82f6 !important;
+  border: none !important;
+  border-radius: 8px !important;
+
+  padding: 8px 16px !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.fc-button:hover {
+  background-color: #2563eb !important;
+}
