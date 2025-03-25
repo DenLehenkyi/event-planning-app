@@ -28,7 +28,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(firebaseUser);
           localStorage.setItem("authUser", JSON.stringify(firebaseUser));
 
-          // Зберігаємо користувача у Firestore
           try {
             await saveUserToFirestore(firebaseUser);
           } catch (error) {
